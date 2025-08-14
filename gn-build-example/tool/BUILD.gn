@@ -1,0 +1,10 @@
+static_library("ip_checker") {
+  sources = [ "ip_checker.cc" ]
+  include_dirs = [ "../third_party/libmaxminddb/include" ]
+  deps = [ "../third_party/libmaxminddb:maxminddb" ]
+}
+
+executable("check_ip_tool") {
+  sources = [ "main.cc" ]
+  deps = [ ":ip_checker" ]
+}

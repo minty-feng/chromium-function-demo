@@ -1,0 +1,47 @@
+
+static_library("ip_checker") {
+  sources = [ "tool/ip_checker.cc" ]
+  include_dirs = [ "tool", "third_party/libmaxminddb/include" ]
+  deps = [ "third_party/libmaxminddb:maxminddb" ]
+}
+
+executable("check_ip_tool") {
+  sources = [ "tool/main.cc" ]
+  deps = [ ":ip_checker" ]
+}
+
+executable("test_maxminddb") {
+  sources = [ "test_maxminddb.cc" ]
+  include_dirs = [ "third_party/libmaxminddb/include" ]
+  deps = [ "third_party/libmaxminddb:maxminddb" ]
+}
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+
+executable("hello") {
+  sources = [ "hello.cc" ]
+
+  deps = [
+    ":hello_shared",
+    ":hello_static",
+    "third_party/libmaxminddb:maxminddb",
+  ]
+}
+
+shared_library("hello_shared") {
+  sources = [
+    "hello_shared.cc",
+    "hello_shared.h",
+  ]
+
+  defines = [ "HELLO_SHARED_IMPLEMENTATION" ]
+}
+
+static_library("hello_static") {
+  sources = [
+    "hello_static.cc",
+    "hello_static.h",
+  ]
+}

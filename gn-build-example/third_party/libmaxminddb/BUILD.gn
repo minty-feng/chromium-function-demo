@@ -1,0 +1,7 @@
+static_library("maxminddb") {
+  sources = [
+    "src/maxminddb.c",
+    "src/data-pool.c",
+  ]
+  include_dirs = [ "include" ]
+}
