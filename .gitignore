@@ -1,3 +1,5 @@
+node_modules
+*/node_modules/
 blocked_request_system/build/
 gn-build-example/out
 .vscode

@@ -1,0 +1,39 @@
+{
+  "name": "ads-power-clone-vue",
+  "version": "1.0.0",
+  "description": "A Vue 3 clone of AdsPower fingerprint browser management software",
+  "main": "src/main.cjs",
+  "type": "module",
+  "scripts": {
+    "start": "npm run build && ELECTRON_DISABLE_SECURITY_WARNINGS=true ELECTRON_NO_ATTACH_CONSOLE=true ELECTRON_ENABLE_LOGGING=false ELECTRON_ENABLE_SECURE_RESTORABLE_STATE=true ELECTRON_ENABLE_NATIVE_IMAGE_WARNINGS=false ELECTRON_DISABLE_GPU_SANDBOX=true ELECTRON_NO_SANDBOX=true electron .",
+    "dev": "npm run build && ELECTRON_DISABLE_SECURITY_WARNINGS=true ELECTRON_NO_ATTACH_CONSOLE=true ELECTRON_ENABLE_LOGGING=false ELECTRON_ENABLE_SECURE_RESTORABLE_STATE=true ELECTRON_ENABLE_NATIVE_IMAGE_WARNINGS=false ELECTRON_DISABLE_GPU_SANDBOX=true ELECTRON_NO_SANDBOX=true electron . --dev",
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "pack": "echo 'Pack completed'",
+    "dist": "echo 'Dist completed'"
+  },
+  "keywords": [
+    "electron",
+    "vue",
+    "fingerprint",
+    "browser",
+    "automation"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.2.1",
+    "electron": "^25.0.0",
+    "vite": "^5.0.0",
+    "@vitejs/plugin-vue": "^5.0.0"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "vue": "^3.4.0",
+    "vue-router": "^4.2.0",
+    "pinia": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

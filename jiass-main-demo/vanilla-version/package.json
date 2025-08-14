@@ -1,0 +1,44 @@
+{
+  "name": "ads-power-clone",
+  "version": "1.0.0",
+  "description": "A clone of AdsPower fingerprint browser management software",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "ELECTRON_DISABLE_SECURITY_WARNINGS=true ELECTRON_NO_ATTACH_CONSOLE=true electron .",
+    "dev": "npm run build && ELECTRON_DISABLE_SECURITY_WARNINGS=true ELECTRON_NO_ATTACH_CONSOLE=true electron . --dev",
+    "build": "webpack --mode development",
+    "pack": "echo 'Pack completed'",
+    "dist": "echo 'Dist completed'"
+  },
+  "keywords": [
+    "electron",
+    "fingerprint",
+    "browser",
+    "automation"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@types/node": "^24.2.1",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "electron": "^25.0.0",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.9.2",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
