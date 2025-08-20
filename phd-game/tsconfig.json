@@ -1,12 +1,12 @@
 {
     "compilerOptions": {
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "removeComments": true,
-        "strictNullChecks": true,
-        "strictPropertyInitialization": true,
+        "strictNullChecks": false,
+        "strictPropertyInitialization": false,
         "sourceMap": true,
         "target": "ES6",
-        "moduleResolution": "Bundler",
+        "moduleResolution": "node",
         "rootDir": "./src",
         "outDir": "./build",
         "lib": [

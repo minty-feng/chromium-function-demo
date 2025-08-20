@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="author" content="Mianzhi Wang">
+    <meta charset="utf-8">
     <title>PhD Simulator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet"> -->
@@ -12,7 +10,6 @@
 
 </head>
 <body>
-
     <div id="fx_container" class="fx_container"></div>
     <div id="game_window">
         <div id="stats_bar" class="panel">
@@ -33,10 +30,10 @@
             "attributeDefinitionUrl": "rulesets/default/attributes.yaml",
             "itemDefinitionUrl": "rulesets/default/items.yaml",
             "statusDefinitionUrl": "rulesets/default/status.yaml",
-            "eventDefinitionUrl": "rulesets/default/events.yaml"
+            "eventDefinitionUrl": "rulesets/default/events.yaml",
+            "apiBaseUrl": "http://localhost:8001"
         }
     </script>
-
     <script src="app.bundle.js"></script>
 </body>
 </html>
