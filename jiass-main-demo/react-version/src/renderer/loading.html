@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdsPower Clone - 加载中</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .loading-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 60px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 40px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .loading-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            margin-bottom: 40px;
+        }
+
+        .network-status {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-value {
+            font-weight: bold;
+        }
+
+        .retry-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .retry-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .retry-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 25px;
+            font-size: 1.1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="logo">AdsPower Clone</div>
+        
+        <div class="loading-spinner"></div>
+        
+        <div class="loading-text" id="loadingText">正在连接服务器...</div>
+        <div class="loading-subtitle" id="loadingSubtitle">请稍候，正在加载应用</div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="network-status">
+            <div class="status-item">
+                <span>网络状态:</span>
+                <span class="status-value" id="networkStatus">检测中...</span>
+            </div>
+            <div class="status-item">
+                <span>连接时间:</span>
+                <span class="status-value" id="connectionTime">--</span>
+            </div>
+            <div class="status-item">
+                <span>重试次数:</span>
+                <span class="status-value" id="retryCount">0</span>
+            </div>
+        </div>
+        
+        <button class="retry-btn" id="retryBtn" onclick="retryConnection()">重新连接</button>
+        
+        <div class="error-message" id="errorMessage">
+            网络连接失败，请检查网络设置后重试
+        </div>
+    </div>
+
+    <script>
+        let retryCount = 0;
+        let startTime = Date.now();
+        let progressInterval;
+        let connectionTimeout;
+
+        // 更新连接时间
+        function updateConnectionTime() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById('connectionTime').textContent = `${elapsed}s`;
+        }
+
+        // 模拟进度条
+        function startProgress() {
+            let progress = 0;
+            progressInterval = setInterval(() => {
+                // 更慢的进度增长，模拟网络慢的情况
+                progress += Math.random() * 3 + 0.5; // 0.5-3.5% 的随机增长
+                if (progress > 85) progress = 85; // 不要到100%，等实际连接成功
+                document.getElementById('progressFill').style.width = progress + '%';
+            }, 500); // 每500ms更新一次，更慢
+        }
+
+        // 检测网络状态
+        function checkNetworkStatus() {
+            const statuses = ['检测中...', '网络良好', '网络较慢', '网络不稳定', '连接失败'];
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            document.getElementById('networkStatus').textContent = randomStatus;
+            
+            // 模拟网络差的情况
+            if (Math.random() < 0.3) { // 30% 概率网络差
+                simulateSlowNetwork();
+            }
+        }
+
+        // 模拟网络慢的情况
+        function simulateSlowNetwork() {
+            document.getElementById('loadingText').textContent = '网络连接较慢，正在重试...';
+            document.getElementById('loadingSubtitle').textContent = '检测到网络延迟，请耐心等待';
+            document.getElementById('networkStatus').textContent = '网络较慢';
+            
+            // 模拟连接超时 - 更长的等待时间
+            setTimeout(() => {
+                if (Math.random() < 0.4) { // 40% 概率超时
+                    showError();
+                }
+            }, 8000 + Math.random() * 5000); // 8-13秒的超时时间
+        }
+
+        // 显示错误
+        function showError() {
+            clearInterval(progressInterval);
+            document.getElementById('loadingText').textContent = '连接失败';
+            document.getElementById('loadingSubtitle').textContent = '无法连接到服务器';
+            document.getElementById('networkStatus').textContent = '连接失败';
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('retryBtn').disabled = false;
+        }
+
+        // 重试连接
+        function retryConnection() {
+            retryCount++;
+            document.getElementById('retryCount').textContent = retryCount;
+            document.getElementById('retryBtn').disabled = true;
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('loadingText').textContent = '正在重新连接...';
+            document.getElementById('loadingSubtitle').textContent = `第 ${retryCount} 次重试`;
+            
+            startTime = Date.now();
+            startProgress();
+            
+            // 使用 Electron IPC 进行真实的网络检测
+            if (window.require) {
+                const { ipcRenderer } = window.require('electron');
+                ipcRenderer.invoke('retry-connection').then(result => {
+                    if (result.success) {
+                        simulateSuccess();
+                    } else {
+                        showError();
+                        document.getElementById('errorMessage').textContent = result.message;
+                    }
+                }).catch(error => {
+                    console.error('Retry failed:', error);
+                    showError();
+                });
+            } else {
+                // 模拟重试延迟（用于测试）- 更长的重试时间
+                setTimeout(() => {
+                    if (Math.random() < 0.6) { // 60% 概率成功
+                        simulateSuccess();
+                    } else {
+                        showError();
+                    }
+                }, 5000 + Math.random() * 8000); // 5-13秒的重试时间
+            }
+        }
+
+        // 模拟连接成功
+        function simulateSuccess() {
+            clearInterval(progressInterval);
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('loadingText').textContent = '连接成功！';
+            document.getElementById('loadingSubtitle').textContent = '正在加载应用...';
+            document.getElementById('networkStatus').textContent = '已连接';
+            
+            setTimeout(() => {
+                // 通知 Electron 主进程加载实际应用
+                if (window.electronAPI) {
+                    window.electronAPI.loadMainApp();
+                } else {
+                    // 如果没有 Electron API，显示提示
+                    document.getElementById('loadingText').textContent = '加载完成';
+                    document.getElementById('loadingSubtitle').textContent = '请关闭此窗口，启动主应用';
+                }
+            }, 1000);
+        }
+
+        // 初始化
+        function init() {
+            startProgress();
+            checkNetworkStatus();
+            
+            // 每秒更新连接时间
+            setInterval(updateConnectionTime, 1000);
+            
+            // 模拟网络检测 - 更长的初始检测时间
+            setTimeout(() => {
+                if (Math.random() < 0.5) { // 50% 概率网络差
+                    simulateSlowNetwork();
+                } else {
+                    simulateSuccess();
+                }
+            }, 5000 + Math.random() * 5000); // 5-10秒的初始检测时间
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
